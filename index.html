@@ -1,107 +1,167 @@
-﻿<div id="content">
-    <!-- Bo‘lim mazmuni shu yerda chiqadi -->
+﻿<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Bot</title>
+<style>
+    body {
+        background-color: #e0f7fa;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    #coinCount {
+        font-size: 40px;
+        font-weight: bold;
+        margin: 30px 0;
+    }
+
+    .coinBtn {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        font-size: 50px;
+        cursor: pointer;
+        border: none;
+        background-color: #ffd54f;
+        transition: transform 0.2s;
+    }
+
+    .coinBtn:active {
+        transform: scale(1.2);
+    }
+
+    .missionBtn, .subscribeBtn {
+        padding: 15px 30px;
+        font-size: 18px;
+        border-radius: 12px;
+        margin: 20px 0;
+        cursor: pointer;
+        border: none;
+        background-color: #4db6ac;
+        color: white;
+        transition: transform 0.2s;
+    }
+
+    .missionBtn:active, .subscribeBtn:active {
+        transform: scale(1.05);
+    }
+
+    .subscribeBtn {
+        background-color: #039be5;
+        font-size: 16px;
+        padding: 12px 25px;
+    }
+
+    .section {
+        margin-top: 50px;
+    }
+
+    #menu {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        background-color: #b2ebf2;
+        padding: 10px 0;
+        border-top: 2px solid #4dd0e1;
+    }
+
+    #menu button {
+        font-size: 18px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: color 0.2s;
+    }
+
+    #menu button:hover {
+        color: #00796b;
+    }
+</style>
+</head>
+<body>
+
+<div id="home" class="section">
+    <div id="coinCount">0</div>
+    <button class="coinBtn" onclick="collectCoin()">🪙</button>
 </div>
 
-<div class="bottom-nav">
-    <button id="home" class="active">Home</button>
-    <button id="missions">Missions</button>
-    <button id="profile">Profile</button>
+<div id="missions" class="section" style="display:none;">
+    <button class="missionBtn" onclick="watchAd()">Reklama ko'rish (+150 tanga)</button>
+    <br>
+    <a href="https://t.me/YourChannelName" target="_blank">
+        <button class="subscribeBtn">Kanalga obuna bo'lish</button>
+    </a>
+</div>
+
+<div id="profile" class="section" style="display:none;">
+    <h2>Profil</h2>
+    <p>Bu yerda profil ma'lumotlari chiqadi</p>
+</div>
+
+<div id="menu">
+    <button onclick="showHome()">Home</button>
+    <button onclick="showMissions()">Missions</button>
+    <button onclick="showProfile()">Profile</button>
 </div>
 
 <script>
-let coins = parseInt(localStorage.getItem('coins')) || 0;
+    let coins = 0;
 
-function updateCoins() {
-    localStorage.setItem('coins', coins);
-}
+    function saveCoins() {
+        localStorage.setItem('coins', coins);
+    }
 
-// Home bo‘limi
-function showHome() {
-    document.getElementById("content").innerHTML = `
-        <h2 class="title">Home</h2>
-        <p class="coins-text">Tangalar: <span id="coinsSpan">${coins}</span></p>
-        <img src="https://i.ibb.co/8s4r7sX/new-coin.png" id="coinImg" class="coin-img" alt="tanga">
-    `;
-    document.getElementById("coinImg").onclick = () => {
+    function loadCoins() {
+        coins = parseInt(localStorage.getItem('coins')) || 0;
+    }
+
+    function updateCoins() {
+        document.getElementById('coinCount').textContent = coins;
+    }
+
+    function collectCoin() {
         coins += 1;
+        saveCoins();
         updateCoins();
-        document.getElementById("coinsSpan").textContent = coins;
     }
-}
 
-// Missions bo‘limi
-function showMissions() {
-    document.getElementById("content").innerHTML = `
-        <h2 class="title">Missions</h2>
-        <button id="watchAd" class="ad-button">Reklama ko‘rish</button>
-    `;
-    document.getElementById("watchAd").onclick = () => {
-        alert("Reklama ko‘rildi! Siz 150 tanga oldingiz.");
+    function watchAd() {
         coins += 150;
+        saveCoins();
         updateCoins();
+        alert("Siz 150 tanga oldingiz!");
     }
-}
 
-// Profile bo‘limi
-function showProfile() {
-    document.getElementById("content").innerHTML = `
-        <h2 class="title">Profile</h2>
-        <p class="profile-text">Profil bo‘limi</p>
-    `;
-}
+    function showHome() {
+        document.getElementById('home').style.display = 'block';
+        document.getElementById('missions').style.display = 'none';
+        document.getElementById('profile').style.display = 'none';
+    }
 
-// Pastki nav tugmalari
-document.getElementById("home").onclick = () => { setActive("home"); showHome(); };
-document.getElementById("missions").onclick = () => { setActive("missions"); showMissions(); };
-document.getElementById("profile").onclick = () => { setActive("profile"); showProfile(); };
+    function showMissions() {
+        document.getElementById('home').style.display = 'none';
+        document.getElementById('missions').style.display = 'block';
+        document.getElementById('profile').style.display = 'none';
+    }
 
-function setActive(activeId) {
-    ["home", "missions", "profile"].forEach(id => document.getElementById(id).classList.remove("active"));
-    document.getElementById(activeId).classList.add("active");
-}
+    function showProfile() {
+        document.getElementById('home').style.display = 'none';
+        document.getElementById('missions').style.display = 'none';
+        document.getElementById('profile').style.display = 'block';
+    }
 
-// Dastlab Home ochiladi
-showHome();
+    window.onload = function() {
+        loadCoins();
+        updateCoins();
+    };
 </script>
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-}
-
-.title {
-    font-size: 30px;  /* Yozuv kattaligi */
-    font-weight: bold;
-}
-
-.coins-text, .profile-text {
-    font-size: 35px;  /* Tangalar va profile yozuvi kattaligi */
-}
-
-.coin-img {
-    width: 100px;  /* Rasm kattaligi */
-    cursor: pointer;
-}
-
-.ad-button {
-    font-size: 35px;
-    padding: 20px 20px;
-    cursor: pointer;
-}
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background-color: #eee;
-    padding: 20px 0;
-}
-
-.bottom-nav button.active {
-    background-color: #ccc;
-    font-weight: bold;
-    font-size: 25px;
-}
-</style>
+</body>
+</html>
