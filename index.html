@@ -1,84 +1,58 @@
-﻿<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClickEarn Mini O'yin</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; text-align: center; }
-        .coins { margin: 20px; font-size: 24px; }
-        button { padding: 10px 20px; margin: 5px; font-size: 18px; }
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            background: #f1f1f1;
-            border-top: 1px solid #ccc;
-            padding: 10px 0;
-        }
-        .bottom-nav button { flex: 1; margin: 0; border: none; background: none; font-size: 16px; }
-        .active { font-weight: bold; color: blue; }
-    </style>
-</head>
-<body>
-
-<h2>🕹 Tangalarni yig‘ish o‘yini</h2>
-<p class="coins">Tangalar: <span id="coins">0</span></p>
-<button id="collect">Tanga yig‘ish</button>
-<button id="send">Botga yuborish</button>
-
-<div class="bottom-nav">
+﻿<div class="bottom-nav">
     <button id="home" class="active">Home</button>
     <button id="missions">Missions</button>
     <button id="profile">Profile</button>
 </div>
 
+<div id="content">
+    <!-- Bu yerda Home/Missions/Profile mazmuni chiqadi -->
+</div>
+
 <script>
-    let coins = 0;
-    const coinsSpan = document.getElementById("coins");
-    const collectBtn = document.getElementById("collect");
-    const sendBtn = document.getElementById("send");
+let coins = parseInt(localStorage.getItem('coins')) || 0;
 
-    collectBtn.onclick = () => {
-        coins++;
-        coinsSpan.textContent = coins;
-    };
+function updateCoins() {
+    localStorage.setItem('coins', coins);
+}
 
-    sendBtn.onclick = () => {
-        if (window.Telegram.WebApp) {
-            Telegram.WebApp.sendData(coins.toString());
-            alert("Tangalar botga yuborildi!");
-        } else {
-            alert("Bu WebApp Telegram ichida ochilishi kerak!");
-        }
-    };
+function showHome() {
+    document.getElementById("content").innerHTML = `
+        <h2>Home</h2>
+        <p>Tangalar: <span id="coinsSpan">${coins}</span></p>
+    `;
+}
 
-    // Pastki menyu tugmalari
-    const homeBtn = document.getElementById("Home");
-    const missionsBtn = document.getElementById("Missions");
-    const profileBtn = document.getElementById("Profile");
+function showProfile() {
+    document.getElementById("content").innerHTML = `
+        <h2>Profile</h2>
+        <p>Sizning tangalaringiz: <span id="coinsSpan">${coins}</span></p>
+    `;
+}
 
-    homeBtn.onclick = () => {
-        setActive("Home");
-        alert("Home sahifasi");
-    };
-    missionsBtn.onclick = () => {
-        setActive("missions");
-        alert("Missions sahifasi");
-    };
-    profileBtn.onclick = () => {
-        setActive("profile");
-        alert("Profile sahifasi");
-    };
-
-    function setActive(activeId) {
-        [homeBtn, missionsBtn, profileBtn].forEach(btn => btn.classList.remove("active"));
-        document.getElementById(activeId).classList.add("active");
+function showMissions() {
+    document.getElementById("content").innerHTML = `
+        <h2>Missions</h2>
+        <p>Tangalar: <span id="coinsSpan">${coins}</span></p>
+        <button id="watchAd">Reklama ko‘rish</button>
+    `;
+    document.getElementById("watchAd").onclick = () => {
+        alert("Reklama ko‘rildi! Siz 150 tanga oldingiz.");
+        coins += 150;
+        updateCoins();
+        document.getElementById("coinsSpan").textContent = coins;
     }
-</script>
+}
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-</body>
-</html>
+// Pastki nav tugmalari
+document.getElementById("home").onclick = () => { setActive("home"); showHome(); };
+document.getElementById("missions").onclick = () => { setActive("missions"); showMissions(); };
+document.getElementById("profile").onclick = () => { setActive("profile"); showProfile(); };
+
+function setActive(activeId) {
+    ["home", "missions", "profile"].forEach(id => document.getElementById(id).classList.remove("active"));
+    document.getElementById(activeId).classList.add("active");
+}
+
+// Dastlab Home ochiladi
+showHome();
+</script>
