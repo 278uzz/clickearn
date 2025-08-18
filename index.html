@@ -6,58 +6,68 @@
 <title>Mini Bot</title>
 <style>
     body {
-        background-color: #e0f7fa;
-        font-family: Arial, sans-serif;
+        background-color: #f0f4f8;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         text-align: center;
         margin: 0;
         padding: 0;
     }
 
     #coinCount {
-        font-size: 40px;
+        font-size: 48px;
         font-weight: bold;
-        margin: 30px 0;
+        margin: 40px 0;
+        color: #ffb300;
+        text-shadow: 2px 2px 5px #999;
     }
 
     .coinBtn {
-        width: 120px;
-        height: 120px;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
-        font-size: 50px;
+        font-size: 60px;
         cursor: pointer;
         border: none;
-        background-color: #ffd54f;
-        transition: transform 0.2s;
+        background: radial-gradient(circle at 30% 30%, #ffd54f, #ffb300);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .coinBtn:active {
         transform: scale(1.2);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
 
     .missionBtn, .subscribeBtn {
-        padding: 15px 30px;
-        font-size: 18px;
-        border-radius: 12px;
-        margin: 20px 0;
+        padding: 18px 36px;
+        font-size: 20px;
+        border-radius: 15px;
+        margin: 25px 0;
         cursor: pointer;
         border: none;
-        background-color: #4db6ac;
         color: white;
-        transition: transform 0.2s;
+        font-weight: bold;
+        transition: transform 0.2s, background-color 0.2s;
     }
 
-    .missionBtn:active, .subscribeBtn:active {
-        transform: scale(1.05);
+    .missionBtn {
+        background-color: #26a69a;
+    }
+
+    .missionBtn:hover {
+        background-color: #00897b;
     }
 
     .subscribeBtn {
         background-color: #039be5;
-        font-size: 16px;
-        padding: 12px 25px;
+    }
+
+    .subscribeBtn:hover {
+        background-color: #0277bd;
     }
 
     .section {
-        margin-top: 50px;
+        margin-top: 60px;
     }
 
     #menu {
@@ -66,13 +76,14 @@
         width: 100%;
         display: flex;
         justify-content: space-around;
-        background-color: #b2ebf2;
-        padding: 10px 0;
-        border-top: 2px solid #4dd0e1;
+        background-color: #ffffff;
+        padding: 15px 0;
+        border-top: 2px solid #b0bec5;
+        box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
     }
 
     #menu button {
-        font-size: 18px;
+        font-size: 20px;
         border: none;
         background: none;
         cursor: pointer;
@@ -81,7 +92,18 @@
     }
 
     #menu button:hover {
-        color: #00796b;
+        color: #0288d1;
+    }
+
+    /* Ikonka o‘zgartirish */
+    #coinBtn::before {
+        content: "🪙";
+    }
+    .missionBtn::before {
+        content: "🎬 ";
+    }
+    .subscribeBtn::before {
+        content: "🔔 ";
     }
 </style>
 </head>
@@ -89,7 +111,7 @@
 
 <div id="home" class="section">
     <div id="coinCount">0</div>
-    <button class="coinBtn" onclick="collectCoin()">🪙</button>
+    <button class="coinBtn" onclick="collectCoin()"></button>
 </div>
 
 <div id="missions" class="section" style="display:none;">
@@ -106,9 +128,9 @@
 </div>
 
 <div id="menu">
-    <button onclick="showHome()">Home</button>
-    <button onclick="showMissions()">Missions</button>
-    <button onclick="showProfile()">Profile</button>
+    <button onclick="showHome()">🏠 Home</button>
+    <button onclick="showMissions()">🎯 Missions</button>
+    <button onclick="showProfile()">👤 Profile</button>
 </div>
 
 <script>
