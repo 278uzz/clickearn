@@ -1,11 +1,11 @@
-﻿<div class="bottom-nav">
+﻿<div id="content">
+    <!-- Bo‘lim mazmuni shu yerda chiqadi -->
+</div>
+
+<div class="bottom-nav">
     <button id="home" class="active">Home</button>
     <button id="missions">Missions</button>
     <button id="profile">Profile</button>
-</div>
-
-<div id="content">
-    <!-- Bu yerda Home/Missions/Profile mazmuni chiqadi -->
 </div>
 
 <script>
@@ -15,32 +15,39 @@ function updateCoins() {
     localStorage.setItem('coins', coins);
 }
 
+// Home bo‘limi
 function showHome() {
     document.getElementById("content").innerHTML = `
         <h2>Home</h2>
         <p>Tangalar: <span id="coinsSpan">${coins}</span></p>
+        <img src="https://i.ibb.co/1rF0c6c/coin.png" id="coinImg" style="width:50px;cursor:pointer;" alt="tanga">
     `;
+    document.getElementById("coinImg").onclick = () => {
+        coins += 1;
+        updateCoins();
+        document.getElementById("coinsSpan").textContent = coins;
+    }
 }
 
-function showProfile() {
-    document.getElementById("content").innerHTML = `
-        <h2>Profile</h2>
-        <p>Sizning tangalaringiz: <span id="coinsSpan">${coins}</span></p>
-    `;
-}
-
+// Missions bo‘limi
 function showMissions() {
     document.getElementById("content").innerHTML = `
         <h2>Missions</h2>
-        <p>Tangalar: <span id="coinsSpan">${coins}</span></p>
         <button id="watchAd">Reklama ko‘rish</button>
     `;
     document.getElementById("watchAd").onclick = () => {
         alert("Reklama ko‘rildi! Siz 150 tanga oldingiz.");
         coins += 150;
         updateCoins();
-        document.getElementById("coinsSpan").textContent = coins;
     }
+}
+
+// Profile bo‘limi
+function showProfile() {
+    document.getElementById("content").innerHTML = `
+        <h2>Profile</h2>
+        <p>Profil bo‘limi</p>
+    `;
 }
 
 // Pastki nav tugmalari
@@ -56,3 +63,18 @@ function setActive(activeId) {
 // Dastlab Home ochiladi
 showHome();
 </script>
+
+<style>
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #eee;
+    padding: 10px 0;
+}
+.bottom-nav button.active {
+    background-color: #ccc;
+}
+</style>
