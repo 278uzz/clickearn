@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<title>Mini Tanga Oyin</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.coins-text {
+    font-size: 24px;
+    margin: 15px 0;
+}
+
+.coin-img {
+    width: 80px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.coin-img:active {
+    transform: scale(1.2);
+}
+
+.ad-button {
+    font-size: 22px;
+    padding: 12px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #eee;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+}
+
+.bottom-nav button {
+    font-size: 20px;
+    padding: 8px 16px;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.bottom-nav button.active {
+    font-weight: bold;
+    color: #007bff;
+}
+</style>
+</head>
+<body>
+
+<div id="content"></div>
+
+<div class="bottom-nav">
+    <button id="home" class="active">Home</button>
+    <button id="missions">Missions</button>
+    <button id="profile">Profile</button>
+</div>
+
+<script>
+let coins = parseInt(localStorage.getItem('coins')) || 0;
+
+function updateCoins() {
+    localStorage.setItem('coins', coins);
+}
+
+// Home bo‘limi
+function showHome() {
+    document.getElementById("content").innerHTML = `
+        <h2 class="title">Home</h2>
+        <p class="coins-text">Tangalar: <span id="coinsSpan">${coins}</span></p>
+        <img src="https://i.ibb.co/8s4r7sX/new-coin.png" id="coinImg" class="coin-img" alt="tanga">
+    `;
+    document.getElementById("coinImg").onclick = () => {
+        coins += 1;
+        updateCoins();
+        document.getElementById("coinsSpan").textContent = coins;
+    }
+}
+
+// Missions bo‘limi
+function showMissions() {
+    document.getElementById("content").innerHTML = `
+        <h2 class="title">Missions</h2>
+        <button id="watchAd" class="ad-button">Reklama ko‘rish</button>
+    `;
+    document.getElementById("watchAd").onclick = () => {
+        alert("Reklama ko‘rildi! Siz 150 tanga oldingiz.");
+        coins += 150;
+        updateCoins();
+    }
+}
+
+// Profile bo‘limi
+function showProfile() {
+    document.getElementById("content").innerHTML = `
+        <h2 class="title">Profile</h2>
+        <p class="coins-text">Profil bo‘limi</p>
+    `;
+}
+
+// Pastki nav tugmalari
+document.getElementById("home").onclick = () => { setActive("home"); showHome(); };
+document.getElementById("missions").onclick = () => { setActive("missions"); showMissions(); };
+document.getElementById("profile").onclick = () => { setActive("profile"); showProfile(); };
+
+function setActive(activeId) {
+    ["home", "missions", "profile"].forEach(id => document.getElementById(id).classList.remove("active"));
+    document.getElementById(activeId).classList.add("active");
+}
+
+// Dastlab Home ochiladi
+showHome();
+</script>
+
+</body>
+</html>
