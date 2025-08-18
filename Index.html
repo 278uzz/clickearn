@@ -9,23 +9,28 @@ body {
     margin: 0;
     padding: 0;
     text-align: center;
+    background-color: #f0f8ff; /* Orqa fon rangi */
 }
 
 .title {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: bold;
     margin-top: 20px;
 }
 
 .coins-text {
-    font-size: 24px;
+    font-size: 28px;
     margin: 15px 0;
 }
 
 .coin-img {
-    width: 80px;
+    width: 120px; /* rasm kattaligi */
+    height: 120px;
+    border-radius: 50%; /* yumaloq qilamiz */
     cursor: pointer;
     transition: transform 0.2s;
+    display: block;
+    margin: 20px auto; /* markazga joylash */
 }
 
 .coin-img:active {
@@ -33,8 +38,8 @@ body {
 }
 
 .ad-button {
-    font-size: 22px;
-    padding: 12px 20px;
+    font-size: 26px;
+    padding: 15px 25px;
     margin-top: 20px;
     cursor: pointer;
 }
@@ -51,7 +56,7 @@ body {
 }
 
 .bottom-nav button {
-    font-size: 20px;
+    font-size: 22px;
     padding: 8px 16px;
     cursor: pointer;
     border: none;
@@ -85,8 +90,8 @@ function updateCoins() {
 function showHome() {
     document.getElementById("content").innerHTML = `
         <h2 class="title">Home</h2>
-        <p class="coins-text">Tangalar: <span id="coinsSpan">${coins}</span></p>
-        <img src="https://i.ibb.co/8s4r7sX/new-coin.png" id="coinImg" class="coin-img" alt="tanga">
+        <p class="coins-text"><span id="coinsSpan">${coins}</span></p>
+        <img src="https://i.ibb.co/2yLZ0d7/home-icon.png" id="coinImg" class="coin-img" alt="tanga">
     `;
     document.getElementById("coinImg").onclick = () => {
         coins += 1;
@@ -99,6 +104,7 @@ function showHome() {
 function showMissions() {
     document.getElementById("content").innerHTML = `
         <h2 class="title">Missions</h2>
+        <img src="https://i.ibb.co/fYnTq1Y/mission-icon.png" class="coin-img" alt="mission">
         <button id="watchAd" class="ad-button">Reklama ko‘rish</button>
     `;
     document.getElementById("watchAd").onclick = () => {
