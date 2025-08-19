@@ -3,96 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClickEarn O‘yini</title>
+  <title>ClickEarn Mini O‘yini</title>
   <style>
-    body {     
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: white;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    header {
-      padding: 15px;
-      background: #1f1f1f;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .coin-display {
-      margin: 30px 0;
-      font-size: 26px;
-      color: #ffd600;
-      font-weight: bold;
-    }
-    .coin-btn {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: gold;
-      border: none;
-      font-size: 28px;
-      font-weight: bold;
-      color: #222;
-      box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .coin-btn:active { transform: scale(0.9); }
-    nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #1f1f1f;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-    }
-    nav button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    .section { display: none; padding: 20px; }
-    .active { display: block; }
-    #adFrame { margin-top: 20px; display: none; }
-    #adIframe {
-      width: 100%;
-      height: 400px;
-      border: none;
-      border-radius: 10px;
-    }
-    .missionBtn {
-      padding: 12px 20px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      background: #26a69a;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .profile-item { margin: 15px 0; font-size: 18px; }
-    .lang-btn {
-      margin: 5px;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .withdraw-btn {
-      padding: 14px 22px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      background: #ff5722;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    body { font-family: Arial, sans-serif; background: #121212; color: white; text-align:center; margin:0; padding:0; }
+    header { padding: 15px; background:#1f1f1f; font-size:20px; font-weight:bold; }
+    .coin-display { margin:30px 0; font-size:26px; color:#ffd600; font-weight:bold; }
+    .coin-btn { width:180px; height:180px; border-radius:50%; background:gold; border:none; font-size:28px; font-weight:bold; color:#222; box-shadow:0 0 25px rgba(255,215,0,0.7); cursor:pointer; transition:0.2s; }
+    .coin-btn:active { transform:scale(0.9); }
+    nav { position:fixed; bottom:0; width:100%; background:#1f1f1f; display:flex; justify-content:space-around; padding:10px 0; }
+    nav button { background:none; border:none; color:white; font-size:18px; cursor:pointer; }
+    .section { display:none; padding:20px; }
+    .active { display:block; }
+    #adFrame { margin-top:20px; display:none; }
+    #adIframe { width:100%; height:400px; border:none; border-radius:10px; }
+    .missionBtn { padding:12px 20px; font-size:18px; border:none; border-radius:10px; background:#26a69a; color:white; font-weight:bold; cursor:pointer; }
+    .profile-item { margin:15px 0; font-size:18px; }
+    .lang-btn { margin:5px; padding:8px 14px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
   </style>
 </head>
 <body>
@@ -113,7 +39,7 @@
     <div id="adFrame">
       <p id="timerText">⏳ Reklama tugashini kuting: 15s</p>
       <iframe src="" id="adIframe"></iframe>
-      <button id="rewardBtn" onclick="getReward()" disabled>✅ Mukofotni olish</button>
+      <button id="rewardBtn" onclick="getReward()" disabled>✅ Reklama tugadi</button>
     </div>
 
     <br><br>
@@ -125,6 +51,7 @@
   <!-- Profile -->
   <div id="profile" class="section">
     <h2>👤 Profil</h2>
+    <div class="profile-item">ID: <span id="userID">user</span></div>
     <div class="profile-item">Ism: <span id="username">Foydalanuvchi</span></div>
     <div class="profile-item">Admin: <a href="https://t.me/AF_278" target="_blank">@AF_278</a></div>
     <div class="profile-item">
@@ -137,91 +64,118 @@
 
   <!-- Withdraw -->
   <div id="withdraw" class="section">
-    <h2>💸 Yechib olish</h2>
-    <p>Sizda <b><span id="withdrawCoins">0</span></b> ta tanga mavjud.</p>
-    <button class="withdraw-btn" onclick="withdraw()">💳 Tangalarni yechib olish</button>
+    <h2>💵 Pul yechish</h2>
+    <button class="missionBtn" onclick="withdrawCoins()">Yechib olish</button>
   </div>
 
   <!-- Navbar -->
   <nav>
     <button onclick="openTab('home')">🏠 Bosh sahifa</button>
-    <button onclick="openTab('missions')">🎯 Vazifalar</button>
+    <button onclick="openTab('missions')">🎯 Missions</button>
     <button onclick="openTab('profile')">👤 Profil</button>
-    <button onclick="openTab('withdraw')">💸 Yechib olish</button>
+    <button onclick="openTab('withdraw')">💵 Pul yechish</button>
   </nav>
 
-  <script>
-    let coins = parseInt(localStorage.getItem("coins")) || 0;
-    let dailyLimit = 150;
-    let clicksToday = parseInt(localStorage.getItem("clicksToday")) || 0;
-    let timer;
+<script>
+let coins = 0;
+let dailyLimit = 150;
+let clicksToday = 0;
+let timer;
 
-    function updateCoins() {
-      document.getElementById("coinCount").innerText = coins;
-      document.getElementById("dailyLeft").innerText = dailyLimit - clicksToday;
-      document.getElementById("withdrawCoins").innerText = coins;
-      localStorage.setItem("coins", coins);
-      localStorage.setItem("clicksToday", clicksToday);
-    }
+// Foydalanuvchi ID Telegramdan olinadi, misol uchun user
+let userID = "user";
 
-    function clickCoin() {
-      if (clicksToday < dailyLimit) {
-        coins++;
-        clicksToday++;
-        updateCoins();
-      } else {
-        alert("❌ Kunlik limit tugadi! Ertaga yana urinib ko‘ring.");
-      }
-    }
+function updateCoins() {
+  document.getElementById("coinCount").innerText = coins;
+  document.getElementById("dailyLeft").innerText = dailyLimit - clicksToday;
+}
 
-    function openTab(tab) {
-      document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
-      document.getElementById(tab).classList.add("active");
-      updateCoins();
-    }
-
-    function showAd() {
-      document.getElementById("adFrame").style.display = "block";
-      document.getElementById("adIframe").src = "https://www.profitableratecpm.com/xiv0z2chm?key=5690144e75c574aa830a1c168deccde7";
-      
-      let seconds = 15;
-      document.getElementById("timerText").innerText = "⏳ Reklama tugashini kuting: " + seconds + "s";
-      document.getElementById("rewardBtn").disabled = true;
-
-      timer = setInterval(() => {
-        seconds--;
-        document.getElementById("timerText").innerText = "⏳ Reklama tugashini kuting: " + seconds + "s";
-        if (seconds <= 0) {
-          clearInterval(timer);
-          document.getElementById("rewardBtn").disabled = false;
-          document.getElementById("timerText").innerText = "✅ Endi mukofotni oling!";
-        }
-      }, 1000);
-    }
-
-    function getReward() {
-      coins += 150;
-      updateCoins();
-      alert("🎉 Siz 150 tanga oldingiz!");
-      document.getElementById("adFrame").style.display = "none";
-      document.getElementById("adIframe").src = "";
-    }
-
-    function withdraw() {
-      if (coins >= 1000) {
-        alert("✅ So‘rov yuborildi! 1000 tanga = mukofot olasiz.");
-        coins -= 1000;
-        updateCoins();
-      } else {
-        alert("❌ Yechib olish uchun kamida 1000 tanga kerak!");
-      }
-    }
-
-    function setLang(lang) {
-      alert("Til tanlandi: " + lang.toUpperCase());
-    }
-
+function clickCoin() {
+  if (clicksToday < dailyLimit) {
+    coins++;
+    clicksToday++;
     updateCoins();
-  </script>
+  } else alert("❌ Kunlik limit tugadi!");
+  updateServerCoins();
+}
+
+function openTab(tab) {
+  document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+  document.getElementById(tab).classList.add("active");
+}
+
+function showAd() {
+  document.getElementById("adFrame").style.display = "block";
+  document.getElementById("adIframe").src = "https://www.profitableratecpm.com/xiv0z2chm?key=5690144e75c574aa830a1c168deccde7";
+  
+  let seconds = 15;
+  document.getElementById("timerText").innerText = "⏳ Reklama tugashini kuting: " + seconds + "s";
+  document.getElementById("rewardBtn").disabled = true;
+
+  timer = setInterval(() => {
+    seconds--;
+    document.getElementById("timerText").innerText = "⏳ Reklama tugashini kuting: " + seconds + "s";
+    if(seconds<=0){
+      clearInterval(timer);
+      document.getElementById("rewardBtn").disabled = false;
+      document.getElementById("timerText").innerText = "✅ Endi mukofotni oling!";
+    }
+  },1000);
+}
+
+function getReward() {
+  coins += 150;
+  updateCoins();
+  alert("🎉 Siz 150 tanga oldingiz!");
+  document.getElementById("adFrame").style.display = "none";
+  document.getElementById("adIframe").src="";
+  updateServerCoins();
+}
+
+function setLang(lang){
+  alert("Til tanlandi: "+lang.toUpperCase());
+}
+
+// Serverga tangalarni yuborish
+function updateServerCoins(){
+  fetch("http://localhost:3000/updateCoins",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({userID,userID,coins})
+  });
+}
+
+// Serverdan tangalarni olish
+function loadServerCoins(){
+  fetch("http://localhost:3000/getCoins/"+userID)
+  .then(r=>r.json())
+  .then(data=>{
+    coins = data.coins || 0;
+    updateCoins();
+  });
+}
+
+// Pul yechish
+function withdrawCoins(){
+  fetch("http://localhost:3000/withdraw",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({userID})
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    if(data.status==="ok"){
+      alert(`💵 Siz $${data.amount} yechib oldingiz!`);
+      coins=0; clicksToday=0;
+      updateCoins();
+      updateServerCoins();
+    } else alert("❌ Yetarli tanga yo‘q!");
+  });
+}
+
+// Sahifa yuklanganda
+loadServerCoins();
+updateCoins();
+</script>
 </body>
 </html>
