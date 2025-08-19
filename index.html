@@ -1,194 +1,259 @@
 ﻿<!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mini Bot</title>
 <style>
-    body {
-        background-color: #f0f4f8;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        text-align: center;
-        margin: 0;
-        padding: 0;
-    }
+  body {
+    background-color: #f0f4f8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  #coinCount {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 40px 0;
+    color: #ffb300;
+    text-shadow: 2px 2px 5px #999;
+  }
+  .coinBtn {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    font-size: 60px;
+    cursor: pointer;
+    border: none;
+    background: radial-gradient(circle at 30% 30%, #ffd54f, #ffb300);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .coinBtn:active { transform: scale(1.2); box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
 
-    #coinCount {
-        font-size: 48px;
-        font-weight: bold;
-        margin: 40px 0;
-        color: #ffb300;
-        text-shadow: 2px 2px 5px #999;
-    }
+  .missionBtn, .subscribeBtn {
+    padding: 18px 36px;
+    font-size: 20px;
+    border-radius: 15px;
+    margin: 25px 0;
+    cursor: pointer;
+    border: none;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  .missionBtn { background-color: #26a69a; }
+  .missionBtn:hover { background-color: #00897b; }
+  .subscribeBtn { background-color: #039be5; }
+  .subscribeBtn:hover { background-color: #0277bd; }
 
-    .coinBtn {
-        width: 140px;
-        height: 140px;
-        border-radius: 50%;
-        font-size: 60px;
-        cursor: pointer;
-        border: none;
-        background: radial-gradient(circle at 30% 30%, #ffd54f, #ffb300);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
+  .section { margin-top: 60px; }
 
-    .coinBtn:active {
-        transform: scale(1.2);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
+  #menu {
+    position: fixed; bottom: 0; width: 100%;
+    display: flex; justify-content: space-around;
+    background-color: #ffffff; padding: 15px 0;
+    border-top: 2px solid #b0bec5;
+    box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
+  }
+  #menu button {
+    font-size: 20px; border: none; background: none;
+    cursor: pointer; font-weight: bold; transition: color 0.2s;
+  }
+  #menu button:hover { color: #0288d1; }
 
-    .missionBtn, .subscribeBtn {
-        padding: 18px 36px;
-        font-size: 20px;
-        border-radius: 15px;
-        margin: 25px 0;
-        cursor: pointer;
-        border: none;
-        color: white;
-        font-weight: bold;
-        transition: transform 0.2s, background-color 0.2s;
-    }
+  /* Ikonkalar */
+  #coinBtn::before { content: "🪙"; }
+  .missionBtn::before { content: "🎬 "; }
+  .subscribeBtn::before { content: "🔔 "; }
 
-    .missionBtn {
-        background-color: #26a69a;
-    }
+  /* Reklama modal (WebApp ichida ochiladi) */
+  #adOverlay {
+    position: fixed; inset: 0; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.65); z-index: 9999; padding: 10px;
+  }
+  .ad-card {
+    width: min(900px, 96vw);
+    height: min(80vh, 720px);
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .ad-header {
+    padding: 10px 14px; display: flex;
+    align-items: center; justify-content: space-between;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fafafa;
+  }
+  .ad-title { font-weight: 700; font-size: 16px; }
+  .ad-timer { font-family: monospace; font-size: 14px; }
+  .ad-body { flex: 1; position: relative; }
+  #adFrame {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; background: #fff;
+  }
+  .ad-footer {
+    padding: 12px; display: flex; gap: 10px;
+    justify-content: flex-end; border-top: 1px solid #e0e0e0;
+    background: #fafafa;
+  }
+  .ad-btn {
+    padding: 10px 16px; border-radius: 10px; border: none;
+    font-weight: 700; cursor: pointer;
+  }
+  .ad-btn.secondary { background: #e0e0e0; }
+  .ad-btn.primary { background: #26a69a; color: #fff; }
+  .ad-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .hint {
+    font-size: 12px; color: #666; margin: 6px 12px 0 12px; text-align: left;
+  }
 
-    .missionBtn:hover {
-        background-color: #00897b;
-    }
-
-    .subscribeBtn {
-        background-color: #039be5;
-    }
-
-    .subscribeBtn:hover {
-        background-color: #0277bd;
-    }
-
-    .section {
-        margin-top: 60px;
-    }
-
-    #menu {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        background-color: #ffffff;
-        padding: 15px 0;
-        border-top: 2px solid #b0bec5;
-        box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
-    }
-
-    #menu button {
-        font-size: 20px;
-        border: none;
-        background: none;
-        cursor: pointer;
-        font-weight: bold;
-        transition: color 0.2s;
-    }
-
-    #menu button:hover {
-        color: #0288d1;
-    }
-
-    /* Ikonka o‘zgartirish */
-    #coinBtn::before {
-        content: "🪙";
-    }
-    .missionBtn::before {
-        content: "🎬 ";
-    }
-    .subscribeBtn::before {
-        content: "🔔 ";
-    }
+  /* Body scroll bloklash uchun */
+  .no-scroll { overflow: hidden; height: 100vh; }
 </style>
 </head>
 <body>
 
 <div id="home" class="section">
-    <div id="coinCount">0</div>
-    <button class="coinBtn" onclick="collectCoin()"></button>
+  <div id="coinCount">0</div>
+  <button class="coinBtn" onclick="collectCoin()"></button>
 </div>
 
 <div id="missions" class="section" style="display:none;">
-    <button class="missionBtn" onclick="watchAd()">Reklama ko'rish (+150 tanga)</button>
-    <br>
-    <a href="https://t.me/YourChannelName" target="_blank">
-        <button class="subscribeBtn">Kanalga obuna bo'lish</button>
-    </a>
+  <button class="missionBtn" onclick="watchAd()">Reklama ko'rish (+150 tanga)</button>
+  <br>
+  <a href="https://t.me/YourChannelName" target="_blank" rel="noopener">
+    <button class="subscribeBtn">Kanalga obuna bo'lish</button>
+  </a>
 </div>
 
 <div id="profile" class="section" style="display:none;">
-    <h2>Profil</h2>
-    <p>Bu yerda profil ma'lumotlari chiqadi</p>
+  <h2>Profil</h2>
+  <p>Bu yerda profil ma'lumotlari chiqadi</p>
 </div>
 
+<!-- Pastki menyu -->
 <div id="menu">
-    <button onclick="showHome()">🏠 Home</button>
-    <button onclick="showMissions()">🎯 Missions</button>
-    <button onclick="showProfile()">👤 Profile</button>
+  <button onclick="showHome()">🏠 Home</button>
+  <button onclick="showMissions()">🎯 Missions</button>
+  <button onclick="showProfile()">👤 Profile</button>
+</div>
+
+<!-- Reklama modal (iframe ichida) -->
+<div id="adOverlay" role="dialog" aria-modal="true">
+  <div class="ad-card">
+    <div class="ad-header">
+      <div class="ad-title">🎬 Reklama oynasi</div>
+      <div class="ad-timer">Qolgan vaqt: <span id="adTime">15</span>s</div>
+    </div>
+    <div class="ad-body">
+      <iframe id="adFrame"
+        sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
+        referrerpolicy="no-referrer">
+      </iframe>
+    </div>
+    <div class="hint">Agar reklama ko‘rinmasa, quyidagi “Reklamani ochish” tugmasini bosing.</div>
+    <div class="ad-footer">
+      <button id="openExternBtn" class="ad-btn secondary" type="button">Reklamani ochish</button>
+      <button id="closeAdBtn" class="ad-btn primary" type="button" disabled>Yopish va 150 olish</button>
+    </div>
+  </div>
 </div>
 
 <script>
-    let coins = 0;
+  // === Telegram WebApp muhitida balandlikni kengaytirish (ixtiyoriy) ===
+  try { if (window.Telegram && Telegram.WebApp) { Telegram.WebApp.expand(); } } catch(e){}
 
-    function saveCoins() {
-        localStorage.setItem('coins', coins);
-    }
+  let coins = 0;
 
-    function loadCoins() {
-        coins = parseInt(localStorage.getItem('coins')) || 0;
-    }
+  function saveCoins(){ localStorage.setItem('coins', coins); }
+  function loadCoins(){ coins = parseInt(localStorage.getItem('coins')) || 0; }
+  function updateCoins(){ document.getElementById('coinCount').textContent = coins; }
+  function collectCoin(){ coins += 1; saveCoins(); updateCoins(); }
 
-    function updateCoins() {
-        document.getElementById('coinCount').textContent = coins;
-    }
+  // === Reklama modal boshqaruvi ===
+  const AD_URL = "https://www.profitableratecpm.com/xiv0z2chm?key=5690144e75c574aa830a1c168deccde7";
+  const overlay = document.getElementById('adOverlay');
+  const adFrame = document.getElementById('adFrame');
+  const closeAdBtn = document.getElementById('closeAdBtn');
+  const openExternBtn = document.getElementById('openExternBtn');
+  const adTimeEl = document.getElementById('adTime');
 
-    function collectCoin() {
-        coins += 1;
-        saveCoins();
-        updateCoins();
-    }
+  let adTimer = null;
+  let adSeconds = 15;
 
-    // Reklama ko‘rish tugmasi
-    function watchAd() {
-        const adUrl = "https://www.profitableratecpm.com/xiv0z2chm?key=5690144e75c574aa830a1c168deccde7";
-        window.open(adUrl, "_blank"); // reklama yangi oynada ochiladi
-        setTimeout(function() {
-            coins += 150;
-            saveCoins();
-            updateCoins();
-            alert("Siz 150 tanga oldingiz!");
-        }, 5000); // 5 soniyadan keyin tanga beradi
-    }
+  function openAdModal(){
+    adSeconds = 15;
+    adTimeEl.textContent = adSeconds;
+    closeAdBtn.disabled = true;
 
-    function showHome() {
-        document.getElementById('home').style.display = 'block';
-        document.getElementById('missions').style.display = 'none';
-        document.getElementById('profile').style.display = 'none';
-    }
+    // Modalni ko'rsatish
+    overlay.style.display = 'flex';
+    document.body.classList.add('no-scroll');
 
-    function showMissions() {
-        document.getElementById('home').style.display = 'none';
-        document.getElementById('missions').style.display = 'block';
-        document.getElementById('profile').style.display = 'none';
-    }
+    // Iframe ichida ochishga urinamiz
+    adFrame.src = AD_URL;
 
-    function showProfile() {
-        document.getElementById('home').style.display = 'none';
-        document.getElementById('missions').style.display = 'none';
-        document.getElementById('profile').style.display = 'block';
-    }
+    // Taymer
+    if (adTimer) clearInterval(adTimer);
+    adTimer = setInterval(() => {
+      adSeconds--;
+      adTimeEl.textContent = adSeconds;
+      if (adSeconds <= 0) {
+        clearInterval(adTimer);
+        closeAdBtn.disabled = false; // mukofotni ruxsat beramiz
+      }
+    }, 1000);
+  }
 
-    window.onload = function() {
-        loadCoins();
-        updateCoins();
-    };
+  function closeAdModalAndReward(){
+    // Iframe-ni tozalash
+    adFrame.src = 'about:blank';
+    overlay.style.display = 'none';
+    document.body.classList.remove('no-scroll');
+
+    // Mukofot berish
+    coins += 150;
+    saveCoins();
+    updateCoins();
+    alert("Siz 150 tanga oldingiz!");
+  }
+
+  function watchAd(){
+    openAdModal();
+  }
+
+  // Zaxira: agar iframe ko‘rinmasa, foydalanuvchi shu tugma orqali ochadi (WebApp ichida, o‘sha oynada)
+  openExternBtn.addEventListener('click', () => {
+    // Eslatma: bu sahifadan chiqib ketadi; baribir Telegram webview ichida qoladi
+    window.location.href = AD_URL;
+  });
+
+  closeAdBtn.addEventListener('click', closeAdModalAndReward);
+
+  function showHome(){
+    document.getElementById('home').style.display = 'block';
+    document.getElementById('missions').style.display = 'none';
+    document.getElementById('profile').style.display = 'none';
+  }
+  function showMissions(){
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('missions').style.display = 'block';
+    document.getElementById('profile').style.display = 'none';
+  }
+  function showProfile(){
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('missions').style.display = 'none';
+    document.getElementById('profile').style.display = 'block';
+  }
+
+  window.onload = function(){ loadCoins(); updateCoins(); };
 </script>
 
+<!-- (Ixtiyoriy, kafolatli "ichida ko'rinish" uchun) Adsterra Social Bar/Native Banner skriptini shu joyga qo'yish mumkin
+     --> 
 </body>
 </html>
