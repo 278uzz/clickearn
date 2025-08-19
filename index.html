@@ -154,11 +154,16 @@
         updateCoins();
     }
 
+    // Reklama ko‘rish tugmasi
     function watchAd() {
-        coins += 150;
-        saveCoins();
-        updateCoins();
-        alert("Siz 150 tanga oldingiz!");
+        const adUrl = "https://www.profitableratecpm.com/xiv0z2chm?key=5690144e75c574aa830a1c168deccde7";
+        window.open(adUrl, "_blank"); // reklama yangi oynada ochiladi
+        setTimeout(function() {
+            coins += 150;
+            saveCoins();
+            updateCoins();
+            alert("Siz 150 tanga oldingiz!");
+        }, 5000); // 5 soniyadan keyin tanga beradi
     }
 
     function showHome() {
