@@ -1,230 +1,518 @@
 ﻿<!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClickEarn Mini O'yini</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ClickEarn</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #121212;
-    color: white;
-    text-align: center;
-}
-header {
-    background-color: #1f1f1f;
-    padding: 15px;
-    font-size: 22px;
-    font-weight: bold;
-}
-.section {
-    display: none;
-    padding: 20px;
-}
-.active {
-    display: block;
-}
-.coin-btn {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: gold;
-    border: none;
-    font-size: 28px;
-    font-weight: bold;
-    color: #222;
-    cursor: pointer;
-    box-shadow: 0 0 25px rgba(255,215,0,0.7);
-    margin-top: 20px;
-}
-.coin-btn:active {
-    transform: scale(0.9);
-}
-nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background: #1f1f1f;
-    padding: 10px 0;
-}
-nav button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-}
-.missionBtn {
-    padding: 12px 20px;
-    font-size: 18px;
-    border: none;
-    border-radius: 10px;
-    background: #26a69a;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    margin: 10px 0;
-}
-#adFrame {
-    display: none;
-    margin-top: 15px;
-}
-#adIframe {
-    width: 100%;
-    height: 400px;
-    border: none;
-    border-radius: 10px;
-}
-.profile-item {
-    margin: 12px 0;
-    font-size: 18px;
-}
-.lang-btn {
-    margin: 5px;
-    padding: 8px 14px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
+  :root{
+    --bg:#0f1013;
+    --panel:#181a1f;
+    --muted:#8a8f98;
+    --primary:#00d084;
+    --accent:#ffd600;
+    --danger:#ff4d4f;
+    --text:#ffffff;
+    --card:#1e2128;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Noto Sans",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  }
+  .wrap{min-height:100%; padding-bottom:76px}
+  header{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 16px;background:var(--panel);position:sticky;top:0;z-index:10;
+    border-bottom:1px solid #242833;
+  }
+  header .title{font-weight:700;letter-spacing:.3px}
+  .section{display:none;padding:16px 14px;max-width:720px;margin:0 auto}
+  .section.active{display:block}
+  .card{
+    background:var(--card);border:1px solid #2a2f3a; border-radius:16px;
+    padding:18px; box-shadow:0 10px 25px rgba(0,0,0,.25)
+  }
+  .center{display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .balance{
+    font-size:18px;color:var(--muted);margin-bottom:10px
+  }
+  .coins{
+    font-size:44px;font-weight:800;color:var(--accent);text-shadow:0 0 18px rgba(255,214,0,.25)
+  }
+  .limit{margin-top:8px;color:var(--muted);font-size:14px}
+  .big-coin{
+    margin:22px auto 8px;width:200px;height:200px;border-radius:50%;
+    border:none;cursor:pointer;display:grid;place-items:center;
+    font-size:28px;font-weight:800;color:#3a3100;letter-spacing:.5px;
+    background:radial-gradient(circle at 30% 30%, #ffe780, #ffc400 60%, #ffb300);
+    box-shadow:
+      inset 0 6px 18px rgba(255,255,255,.35),
+      inset 0 -10px 20px rgba(0,0,0,.25),
+      0 18px 40px rgba(255,214,0,.25);
+    transition:transform .08s ease;
+    user-select:none;
+  }
+  .big-coin:active{transform:scale(.94)}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{
+    border:none;border-radius:12px;padding:12px 16px;font-weight:700;
+    background:#2b3140;color:var(--text);cursor:pointer;
+    transition:transform .06s ease,filter .2s ease,background .2s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:var(--primary);color:#082a1f}
+  .btn.warn{background:#2b3140;color:#ffdede;border:1px solid #3a3f4a}
+  .btn.link{background:#20242c;color:#b7ddff}
+  .grid{display:grid;gap:12px}
+  .grid.two{grid-template-columns:1fr 1fr}
+  .muted{color:var(--muted)}
+  .ad-box{margin-top:14px}
+  .ad-frame{
+    width:100%; height:320px; border:none;border-radius:12px; background:#0a0a0a;
+    box-shadow:inset 0 0 0 1px #2b2f3a;
+  }
+  .timer{margin:10px 0; font-weight:700}
+  .kbd{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    background:#101218;border:1px solid #2a2f3a;border-radius:8px;padding:4px 8px;
+  }
+  .list-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px;border-radius:12px;background:#1b1f27;border:1px solid #2a2f3a
+  }
+  .input{
+    width:100%;padding:12px;border-radius:12px;border:1px solid #2a2f3a;background:#141821;color:var(--text)
+  }
+  .footer{
+    position:fixed;left:0;right:0;bottom:0;background:var(--panel);
+    border-top:1px solid #242833; display:grid; grid-template-columns:repeat(4,1fr);
+    padding:8px 6px; gap:6px;
+  }
+  .tab-btn{
+    display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 6px;border-radius:12px;border:none;background:transparent;color:var(--muted);font-weight:700;cursor:pointer
+  }
+  .tab-btn.active{background:#20242e;color:#e9eef5}
+  .tab-btn .ico{font-size:18px}
+  .lang-row{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{
+    border:1px solid #2a2f3a;background:#171b22;border-radius:999px;padding:8px 12px;cursor:pointer
+  }
+  a { color:#9ad6ff; text-decoration:none }
 </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <span class="title" id="appTitle">ClickEarn</span>
+    </header>
 
-<header>💰 ClickEarn Mini O'yini</header>
+    <!-- HOME -->
+    <section id="home" class="section active">
+      <div class="card center">
+        <div class="balance" id="balanceLabel">Tangalar</div>
+        <div class="coins"><span id="coinCount">0</span> 🪙</div>
+        <button id="coinBtn" class="big-coin">BOS!</button>
+        <div class="limit"><span id="dailyLeft">150</span> / 150</div>
+        <div class="row" style="margin-top:10px">
+          <button class="btn link" id="resetDayBtn">Kunlik limitni yangilash</button>
+        </div>
+      </div>
+    </section>
 
-<!-- Home -->
-<div id="home" class="section active">
-    <div>Tangalar: <span id="coinCount">0</span></div>
-    <button class="coin-btn" onclick="clickCoin()">🪙 BOS!</button>
-    <div>Kunlik limit: <span id="dailyLeft">150</span> ta bosish</div>
-</div>
+    <!-- MISSIONS -->
+    <section id="missions" class="section">
+      <div class="card">
+        <h3 style="margin:0 0 8px">🎯 <span data-i18n="missions">Vazifalar</span></h3>
+        <div class="grid">
+          <div class="list-item">
+            <div>
+              <div><b>📺 <span data-i18n="watchAd">Reklama ko‘rish</span></b></div>
+              <div class="muted"><span data-i18n="reward">Mukofot</span>: +150 🪙</div>
+            </div>
+            <button class="btn primary" id="openAdBtn"><span data-i18n="start">Boshlash</span></button>
+          </div>
+        </div>
 
-<!-- Missions -->
-<div id="missions" class="section">
-    <h2>📌 Vazifalar</h2>
-    <button class="missionBtn" onclick="showAd()">🎬 Reklama ko'rish (+150 tanga)</button>
+        <div id="adBlock" class="ad-box" style="display:none">
+          <div class="list-item">
+            <div>
+              ⏳ <b id="timerText">15s</b>
+              <div class="muted" data-i18n="dontClose">Iltimos, oynani 15 soniya yopmang.</div>
+            </div>
+            <button class="btn" id="claimBtn" disabled>✅ <span data-i18n="claim">Mukofotni olish</span></button>
+          </div>
+          <iframe id="adIframe" class="ad-frame" src=""></iframe>
+          <div class="muted" style="margin-top:8px">
+            <span data-i18n="adNote">Agar reklama ko‘rinmasa, qurilmangizda “pop-up/adblock” bloklari yo‘qligini tekshiring.</span>
+          </div>
+        </div>
 
-    <div id="adFrame">
-        <p id="timerText">⏳ Reklama tugashini kuting: 15s</p>
-        <iframe id="adIframe"></iframe>
-        <button id="rewardBtn" onclick="getReward()" disabled>✅ Mukofotni oling</button>
-    </div>
+        <div class="grid" style="margin-top:14px">
+          <a class="btn link" href="https://t.me/YourChannelName" target="_blank">📢 <span data-i18n="joinChannel">Kanalga obuna bo‘lish</span></a>
+        </div>
+      </div>
+    </section>
 
-    <a href="https://t.me/YOUR_CHANNEL" target="_blank">
-        <button class="missionBtn">📢 Kanalga obuna bo'ling</button>
-    </a>
-</div>
+    <!-- PROFILE -->
+    <section id="profile" class="section">
+      <div class="card grid">
+        <h3 style="margin:0">👤 <span data-i18n="profile">Profil</span></h3>
+        <div class="list-item">
+          <div>🆔 <span data-i18n="yourId">Sizning ID</span></div>
+          <div class="kbd" id="userId">—</div>
+        </div>
+        <div class="list-item">
+          <div>👤 <span data-i18n="yourName">Ismingiz</span></div>
+          <div class="kbd" id="userName">—</div>
+        </div>
+        <div class="list-item">
+          <div>💰 <span data-i18n="yourCoins">Tangalar</span></div>
+          <div class="kbd" id="userCoins">0</div>
+        </div>
+        <div class="list-item">
+          <div>🛠 <span data-i18n="admin">Admin</span></div>
+          <div><a href="https://t.me/AF_278" target="_blank">@AF_278</a></div>
+        </div>
 
-<!-- Profile -->
-<div id="profile" class="section">
-    <h2>👤 Profil</h2>
-    <div class="profile-item">ID: <span id="userId">USER123</span></div>
-    <div class="profile-item">Ism: <span id="username">Foydalanuvchi</span></div>
-    <div class="profile-item">Admin: <a href="https://t.me/AF_278" target="_blank">@AF_278</a></div>
-    <div class="profile-item">
-        🌐 Til:
-        <button class="lang-btn" onclick="setLang('uz')">🇺🇿 O'zbek</button>
-        <button class="lang-btn" onclick="setLang('ru')">🇷🇺 Русский</button>
-        <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
-    </div>
-</div>
+        <div>
+          <div style="margin:4px 0 8px"><b>🌐 <span data-i18n="language">Til</span></b></div>
+          <div class="lang-row">
+            <button class="chip" data-lang="uz">🇺🇿 O‘zbek</button>
+            <button class="chip" data-lang="ru">🇷🇺 Русский</button>
+            <button class="chip" data-lang="en">🇬🇧 English</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<!-- Withdraw -->
-<div id="withdraw" class="section">
-    <h2>💵 Pul yechish</h2>
-    <div>Sizda <span id="coinCountWithdraw">0</span> tanga mavjud</div>
-    <button class="missionBtn" onclick="withdrawCoins()">Yechib olish</button>
-</div>
+    <!-- WITHDRAW -->
+    <section id="withdraw" class="section">
+      <div class="card grid">
+        <h3 style="margin:0 0 8px">💳 <span data-i18n="withdraw">Pul yechish</span></h3>
+        <div class="muted" data-i18n="withdrawNote">
+          Minimal yechish limiti: 1000 🪙. Yechish uchun admin bilan bog‘laning.
+        </div>
+        <div class="list-item">
+          <div>💰 <span data-i18n="yourCoins">Tangalar</span></div>
+          <div class="kbd" id="wdCoins">0</div>
+        </div>
+        <label for="amount" class="muted"><span data-i18n="amount">Miqdor (🪙)</span></label>
+        <input id="amount" class="input" type="number" min="0" step="1" placeholder="1000" />
+        <button id="withdrawBtn" class="btn primary">📨 <span data-i18n="requestWithdraw">So‘rov yuborish</span></button>
+        <div id="wdMsg" class="muted"></div>
+      </div>
+    </section>
+  </div>
 
-<nav>
-    <button onclick="openTab('home')">🏠 Home</button>
-    <button onclick="openTab('missions')">🎯 Missions</button>
-    <button onclick="openTab('profile')">👤 Profil</button>
-    <button onclick="openTab('withdraw')">💰 Pul yechish</button>
-</nav>
+  <!-- BOTTOM NAV -->
+  <nav class="footer">
+    <button class="tab-btn active" data-tab="home">
+      <div class="ico">🏠</div><div>Home</div>
+    </button>
+    <button class="tab-btn" data-tab="missions">
+      <div class="ico">🎯</div><div>Missions</div>
+    </button>
+    <button class="tab-btn" data-tab="profile">
+      <div class="ico">👤</div><div>Profile</div>
+    </button>
+    <button class="tab-btn" data-tab="withdraw">
+      <div class="ico">💳</div><div>Yechish</div>
+    </button>
+  </nav>
 
 <script>
-let coins = parseInt(localStorage.getItem('coins')) || 0;
-let dailyLimit = 150;
-let clicksToday = parseInt(localStorage.getItem('clicksToday')) || 0;
-updateDisplay();
+/* =========================
+   CONFIG
+========================= */
+const AD_URL = "https://www.profitableratecpm.com/xiv0z2chm?key=5690144e75c574aa830a1c168deccde7";
+const DAILY_LIMIT = 150;
+const AD_REWARD = 150;
+const AD_SECONDS = 15;
+const MIN_WITHDRAW = 1000;
 
-function updateDisplay() {
-    document.getElementById('coinCount').innerText = coins;
-    document.getElementById('dailyLeft').innerText = dailyLimit - clicksToday;
-    document.getElementById('coinCountWithdraw').innerText = coins;
-}
-
-function clickCoin() {
-    if(clicksToday < dailyLimit){
-        coins++;
-        clicksToday++;
-        saveCoins();
-        updateDisplay();
-    } else {
-        alert("❌ Kunlik limit tugadi!");
+/* =========================
+   TELEGRAM WEBAPP USER
+========================= */
+let tgUser = { id: null, name: null };
+(function detectTelegram(){
+  try {
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+      const u = window.Telegram.WebApp.initDataUnsafe.user;
+      if (u){
+        tgUser.id = String(u.id);
+        tgUser.name = (u.first_name || "") + (u.last_name ? (" " + u.last_name) : "");
+      }
+      // Optional: expand to full-height inside Telegram
+      try { window.Telegram.WebApp.expand(); } catch(e){}
     }
-}
+  } catch(e){}
+})();
 
-function saveCoins() {
-    localStorage.setItem('coins', coins);
-    localStorage.setItem('clicksToday', clicksToday);
-}
+/* =========================
+   STORAGE HELPERS
+========================= */
+const storageKey = (k) => {
+  const uid = tgUser.id || "guest";
+  return `ce_${uid}_${k}`;
+};
+const load = (k, d) => {
+  try{
+    const v = localStorage.getItem(storageKey(k));
+    return v===null ? d : JSON.parse(v);
+  }catch(e){ return d }
+};
+const save = (k, v) => {
+  try{ localStorage.setItem(storageKey(k), JSON.stringify(v)); }catch(e){}
+};
 
-function openTab(tab) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById(tab).classList.add('active');
-}
+/* =========================
+   STATE
+========================= */
+let state = {
+  coins: load("coins", 0),
+  // kunlik limit uchun sanani saqlaymiz
+  day: load("day", new Date().toDateString()),
+  clicks: load("clicks", 0),
+  lang: load("lang", "uz")
+};
 
-let adTimer;
-function showAd(){
-    document.getElementById('adFrame').style.display = 'block';
-    document.getElementById('adIframe').src = "https://www.profitableratecpm.com/xiv0z2chm?key=5690144e75c574aa830a1c168de7";
-    let seconds = 15;
-    document.getElementById('timerText').innerText = "⏳ Reklama tugashini kuting: " + seconds + "s";
-    document.getElementById('rewardBtn').disabled = true;
-    clearInterval(adTimer);
-    adTimer = setInterval(()=>{
-        seconds--;
-        document.getElementById('timerText').innerText = "⏳ Reklama tugashini kuting: " + seconds + "s";
-        if(seconds <=0){
-            clearInterval(adTimer);
-            document.getElementById('rewardBtn').disabled = false;
-            document.getElementById('timerText').innerText = "✅ Endi mukofotni oling!";
-        }
-    },1000);
+// agar sana almashgan bo‘lsa, bugungi kunga reset
+function ensureToday(){
+  const today = new Date().toDateString();
+  if (state.day !== today){
+    state.day = today;
+    state.clicks = 0;
+    save("day", state.day);
+    save("clicks", state.clicks);
+  }
 }
+ensureToday();
 
-function getReward(){
-    coins += 150;
-    saveCoins();
-    updateDisplay();
-    alert("🎉 Siz 150 tanga oldingiz!");
-    document.getElementById('adFrame').style.display='none';
-    document.getElementById('adIframe').src='';
+/* =========================
+   I18N
+========================= */
+const I18N = {
+  uz: {
+    missions: "Vazifalar",
+    watchAd: "Reklama ko‘rish",
+    reward: "Mukofot",
+    start: "Boshlash",
+    dontClose: "Iltimos, oynani 15 soniya yopmang.",
+    claim: "Mukofotni olish",
+    adNote: "Agar reklama ko‘rinmasa, qurilmangizda “pop-up/adblock” bloklari yo‘qligini tekshiring.",
+    joinChannel: "Kanalga obuna bo‘lish",
+    profile: "Profil",
+    yourId: "Sizning ID",
+    yourName: "Ismingiz",
+    yourCoins: "Tangalar",
+    admin: "Admin",
+    language: "Til",
+    withdraw: "Pul yechish",
+    withdrawNote: "Minimal yechish limiti: 1000 🪙. Yechish uchun admin bilan bog‘laning.",
+    amount: "Miqdor (🪙)",
+    requestWithdraw: "So‘rov yuborish",
+    sent: "So‘rov tayyorlandi. Admin bilan bog‘lanishingiz mumkin."
+  },
+  ru: {
+    missions: "Задания",
+    watchAd: "Смотреть рекламу",
+    reward: "Награда",
+    start: "Начать",
+    dontClose: "Пожалуйста, не закрывайте окно 15 секунд.",
+    claim: "Забрать награду",
+    adNote: "Если реклама не отображается, проверьте блокировку всплывающих окон/AdBlock.",
+    joinChannel: "Подписаться на канал",
+    profile: "Профиль",
+    yourId: "Ваш ID",
+    yourName: "Ваше имя",
+    yourCoins: "Монеты",
+    admin: "Админ",
+    language: "Язык",
+    withdraw: "Вывод",
+    withdrawNote: "Минимальный вывод: 1000 🪙. Для вывода свяжитесь с админом.",
+    amount: "Сумма (🪙)",
+    requestWithdraw: "Отправить запрос",
+    sent: "Запрос сформирован. Свяжитесь с админом."
+  },
+  en: {
+    missions: "Missions",
+    watchAd: "Watch Ad",
+    reward: "Reward",
+    start: "Start",
+    dontClose: "Please do not close the window for 15s.",
+    claim: "Claim Reward",
+    adNote: "If the ad is not visible, check popup/adblock settings.",
+    joinChannel: "Join Channel",
+    profile: "Profile",
+    yourId: "Your ID",
+    yourName: "Your Name",
+    yourCoins: "Coins",
+    admin: "Admin",
+    language: "Language",
+    withdraw: "Withdraw",
+    withdrawNote: "Minimum withdrawal is 1000 🪙. Contact admin to proceed.",
+    amount: "Amount (🪙)",
+    requestWithdraw: "Send Request",
+    sent: "Request prepared. You can contact the admin."
+  }
+};
+function applyI18n(){
+  const dict = I18N[state.lang] || I18N.uz;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    if (dict[key]) el.textContent = dict[key];
+  });
+  // title and small labels
+  document.getElementById("appTitle").textContent = "ClickEarn";
+  document.getElementById("balanceLabel").textContent = dict.yourCoins;
 }
+applyI18n();
 
-function setLang(lang){
-    localStorage.setItem('lang', lang);
-    alert("Til tanlandi: "+lang.toUpperCase());
+/* =========================
+   UI BINDINGS
+========================= */
+const tabs = document.querySelectorAll(".tab-btn");
+const sections = document.querySelectorAll(".section");
+tabs.forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    tabs.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    sections.forEach(s=>s.classList.remove("active"));
+    document.getElementById(btn.dataset.tab).classList.add("active");
+    refreshAll();
+  });
+});
+
+const coinCountEl = document.getElementById("coinCount");
+const dailyLeftEl = document.getElementById("dailyLeft");
+const coinBtn = document.getElementById("coinBtn");
+const resetDayBtn = document.getElementById("resetDayBtn");
+
+function refreshHome(){
+  ensureToday();
+  const left = Math.max(0, DAILY_LIMIT - state.clicks);
+  coinCountEl.textContent = state.coins;
+  dailyLeftEl.textContent = left + " / " + DAILY_LIMIT;
 }
+function refreshProfile(){
+  document.getElementById("userId").textContent = tgUser.id || "—";
+  document.getElementById("userName").textContent = tgUser.name || "—";
+  document.getElementById("userCoins").textContent = state.coins;
+}
+function refreshWithdraw(){
+  document.getElementById("wdCoins").textContent = state.coins;
+}
+function refreshAll(){
+  refreshHome(); refreshProfile(); refreshWithdraw();
+}
+refreshAll();
 
-function withdrawCoins(){
-    if(coins >= 1000){
-        alert("💵 1000 tanga = sizga pul beriladi!");
-        coins -= 1000;
-        saveCoins();
-        updateDisplay();
-    } else {
-        alert("❌ Yetarli tangalar yo'q!");
+coinBtn.addEventListener("click", ()=>{
+  ensureToday();
+  if (state.clicks >= DAILY_LIMIT){
+    alert("❌ Kunlik limit tugadi!");
+    return;
+  }
+  state.coins += 1;
+  state.clicks += 1;
+  save("coins", state.coins);
+  save("clicks", state.clicks);
+  refreshAll();
+});
+
+resetDayBtn.addEventListener("click", ()=>{
+  state.day = new Date().toDateString();
+  state.clicks = 0;
+  save("day", state.day);
+  save("clicks", state.clicks);
+  refreshAll();
+});
+
+/* =========================
+   AD FLOW (15s TIMER)
+========================= */
+const openAdBtn = document.getElementById("openAdBtn");
+const adBlock = document.getElementById("adBlock");
+const adIframe = document.getElementById("adIframe");
+const timerText = document.getElementById("timerText");
+const claimBtn = document.getElementById("claimBtn");
+let adTimer = null;
+
+openAdBtn.addEventListener("click", ()=>{
+  adBlock.style.display = "block";
+  adIframe.src = AD_URL; // iframe ichida ko‘rsatamiz
+  claimBtn.disabled = true;
+  let t = AD_SECONDS;
+  timerText.textContent = t+"s";
+  adTimer && clearInterval(adTimer);
+  adTimer = setInterval(()=>{
+    t--;
+    timerText.textContent = (t>0? t : 0) + "s";
+    if (t<=0){
+      clearInterval(adTimer);
+      claimBtn.disabled = false;
+      timerText.textContent = "✅";
     }
-}
+  }, 1000);
+});
+
+claimBtn.addEventListener("click", ()=>{
+  // reklamadan keyin mukofot
+  state.coins += AD_REWARD;
+  save("coins", state.coins);
+  refreshAll();
+  // yopamiz
+  adBlock.style.display = "none";
+  adIframe.src = "";
+  alert("🎉 +"+AD_REWARD+" tanga olindi!");
+});
+
+/* =========================
+   LANGUAGE SWITCH
+========================= */
+document.querySelectorAll(".chip[data-lang]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    state.lang = btn.getAttribute("data-lang");
+    save("lang", state.lang);
+    applyI18n();
+    refreshAll();
+  });
+});
+
+/* =========================
+   WITHDRAW
+========================= */
+const withdrawBtn = document.getElementById("withdrawBtn");
+const wdMsg = document.getElementById("wdMsg");
+withdrawBtn.addEventListener("click", ()=>{
+  const amt = parseInt(document.getElementById("amount").value || "0", 10);
+  if (isNaN(amt) || amt<=0){
+    wdMsg.textContent = "❌ Miqdorni to‘g‘ri kiriting.";
+    wdMsg.style.color = "var(--danger)";
+    return;
+  }
+  if (amt < MIN_WITHDRAW){
+    wdMsg.textContent = "❌ Minimal yechish "+MIN_WITHDRAW+" 🪙.";
+    wdMsg.style.color = "var(--danger)";
+    return;
+  }
+  if (amt > state.coins){
+    wdMsg.textContent = "❌ Sizda yetarli tanga yo‘q.";
+    wdMsg.style.color = "var(--danger)";
+    return;
+  }
+  // admin uchun tayyor matn
+  const uid = tgUser.id || "—";
+  const uname = tgUser.name || "—";
+  const text = encodeURIComponent(`Yechib olish so‘rovi:\nID: ${uid}\nIsm: ${uname}\nMiqdor: ${amt} 🪙`);
+  const link = `https://t.me/AF_278?start=${Date.now()}`;
+  // foydalanuvchiga xabar
+  wdMsg.innerHTML = `✅ <span data-i18n="sent">So‘rov tayyorlandi. Admin bilan bog‘lanishingiz mumkin.</span> <a href="${link}" target="_blank">@AF_278</a>`;
+  wdMsg.style.color = "var(--muted)";
+});
 </script>
-
 </body>
 </html>
