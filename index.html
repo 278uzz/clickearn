@@ -4,110 +4,64 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ClickEarn</title>
+
+<!-- Telegram WebApp SDK (Telegram ichida user ID va ism olish uchun) -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
   :root{
-    --bg:#0f1013;
-    --panel:#181a1f;
-    --muted:#8a8f98;
-    --primary:#00d084;
-    --accent:#ffd600;
-    --danger:#ff4d4f;
-    --text:#ffffff;
-    --card:#1e2128;
+    --bg:#0f1013; --panel:#181a1f; --muted:#8a8f98; --primary:#00d084;
+    --accent:#ffd600; --danger:#ff4d4f; --text:#ffffff; --card:#1e2128;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{
-    margin:0;background:var(--bg);color:var(--text);
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Noto Sans",Arial,sans-serif;
-    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-  }
+  body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Noto Sans",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
   .wrap{min-height:100%; padding-bottom:76px}
-  header{
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    padding:14px 16px;background:var(--panel);position:sticky;top:0;z-index:10;
-    border-bottom:1px solid #242833;
-  }
+  header{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 16px;background:var(--panel);position:sticky;top:0;z-index:10;border-bottom:1px solid #242833}
   header .title{font-weight:700;letter-spacing:.3px}
   .section{display:none;padding:16px 14px;max-width:720px;margin:0 auto}
   .section.active{display:block}
-  .card{
-    background:var(--card);border:1px solid #2a2f3a; border-radius:16px;
-    padding:18px; box-shadow:0 10px 25px rgba(0,0,0,.25)
-  }
+  .card{background:var(--card);border:1px solid #2a2f3a;border-radius:16px;padding:18px;box-shadow:0 10px 25px rgba(0,0,0,.25)}
   .center{display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .balance{
-    font-size:18px;color:var(--muted);margin-bottom:10px
-  }
-  .coins{
-    font-size:44px;font-weight:800;color:var(--accent);text-shadow:0 0 18px rgba(255,214,0,.25)
-  }
+  .balance{font-size:18px;color:var(--muted);margin-bottom:10px}
+  .coins{font-size:44px;font-weight:800;color:var(--accent);text-shadow:0 0 18px rgba(255,214,0,.25)}
   .limit{margin-top:8px;color:var(--muted);font-size:14px}
   .big-coin{
     margin:22px auto 8px;width:200px;height:200px;border-radius:50%;
     border:none;cursor:pointer;display:grid;place-items:center;
     font-size:28px;font-weight:800;color:#3a3100;letter-spacing:.5px;
     background:radial-gradient(circle at 30% 30%, #ffe780, #ffc400 60%, #ffb300);
-    box-shadow:
-      inset 0 6px 18px rgba(255,255,255,.35),
-      inset 0 -10px 20px rgba(0,0,0,.25),
-      0 18px 40px rgba(255,214,0,.25);
-    transition:transform .08s ease;
-    user-select:none;
+    box-shadow: inset 0 6px 18px rgba(255,255,255,.35), inset 0 -10px 20px rgba(0,0,0,.25), 0 18px 40px rgba(255,214,0,.25);
+    transition:transform .08s ease; user-select:none;
   }
   .big-coin:active{transform:scale(.94)}
-  .row{display:flex;gap:10px;flex-wrap:wrap}
-  .btn{
-    border:none;border-radius:12px;padding:12px 16px;font-weight:700;
-    background:#2b3140;color:var(--text);cursor:pointer;
-    transition:transform .06s ease,filter .2s ease,background .2s ease;
+  .big-coin[disabled]{
+    cursor:not-allowed; filter:grayscale(0.6) brightness(0.8); opacity:0.7;
   }
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{border:none;border-radius:12px;padding:12px 16px;font-weight:700;background:#2b3140;color:var(--text);cursor:pointer;transition:transform .06s ease,filter .2s ease,background .2s ease}
   .btn:active{transform:translateY(1px)}
   .btn.primary{background:var(--primary);color:#082a1f}
-  .btn.warn{background:#2b3140;color:#ffdede;border:1px solid #3a3f4a}
   .btn.link{background:#20242c;color:#b7ddff}
   .grid{display:grid;gap:12px}
-  .grid.two{grid-template-columns:1fr 1fr}
   .muted{color:var(--muted)}
   .ad-box{margin-top:14px}
-  .ad-frame{
-    width:100%; height:320px; border:none;border-radius:12px; background:#0a0a0a;
-    box-shadow:inset 0 0 0 1px #2b2f3a;
-  }
-  .timer{margin:10px 0; font-weight:700}
-  .kbd{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-    background:#101218;border:1px solid #2a2f3a;border-radius:8px;padding:4px 8px;
-  }
-  .list-item{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:12px;border-radius:12px;background:#1b1f27;border:1px solid #2a2f3a
-  }
-  .input{
-    width:100%;padding:12px;border-radius:12px;border:1px solid #2a2f3a;background:#141821;color:var(--text)
-  }
-  .footer{
-    position:fixed;left:0;right:0;bottom:0;background:var(--panel);
-    border-top:1px solid #242833; display:grid; grid-template-columns:repeat(4,1fr);
-    padding:8px 6px; gap:6px;
-  }
-  .tab-btn{
-    display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 6px;border-radius:12px;border:none;background:transparent;color:var(--muted);font-weight:700;cursor:pointer
-  }
+  .ad-frame{width:100%; height:320px; border:none;border-radius:12px; background:#0a0a0a; box-shadow:inset 0 0 0 1px #2b2f3a}
+  .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;background:#101218;border:1px solid #2a2f3a;border-radius:8px;padding:4px 8px}
+  .list-item{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:#1b1f27;border:1px solid #2a2f3a}
+  .input{width:100%;padding:12px;border-radius:12px;border:1px solid #2a2f3a;background:#141821;color:var(--text)}
+  .footer{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid #242833; display:grid; grid-template-columns:repeat(4,1fr); padding:8px 6px; gap:6px}
+  .tab-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 6px;border-radius:12px;border:none;background:transparent;color:var(--muted);font-weight:700;cursor:pointer}
   .tab-btn.active{background:#20242e;color:#e9eef5}
   .tab-btn .ico{font-size:18px}
   .lang-row{display:flex;gap:8px;flex-wrap:wrap}
-  .chip{
-    border:1px solid #2a2f3a;background:#171b22;border-radius:999px;padding:8px 12px;cursor:pointer
-  }
+  .chip{border:1px solid #2a2f3a;background:#171b22;border-radius:999px;padding:8px 12px;cursor:pointer}
   a { color:#9ad6ff; text-decoration:none }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <span class="title" id="appTitle">ClickEarn</span>
-    </header>
+    <header><span class="title" id="appTitle">ClickEarn</span></header>
 
     <!-- HOME -->
     <section id="home" class="section active">
@@ -207,35 +161,23 @@
     </section>
   </div>
 
-  <!-- BOTTOM NAV -->
+  <!-- NAV -->
   <nav class="footer">
-    <button class="tab-btn active" data-tab="home">
-      <div class="ico">🏠</div><div>Home</div>
-    </button>
-    <button class="tab-btn" data-tab="missions">
-      <div class="ico">🎯</div><div>Missions</div>
-    </button>
-    <button class="tab-btn" data-tab="profile">
-      <div class="ico">👤</div><div>Profile</div>
-    </button>
-    <button class="tab-btn" data-tab="withdraw">
-      <div class="ico">💳</div><div>Yechish</div>
-    </button>
+    <button class="tab-btn active" data-tab="home"><div class="ico">🏠</div><div>Home</div></button>
+    <button class="tab-btn" data-tab="missions"><div class="ico">🎯</div><div>Missions</div></button>
+    <button class="tab-btn" data-tab="profile"><div class="ico">👤</div><div>Profile</div></button>
+    <button class="tab-btn" data-tab="withdraw"><div class="ico">💳</div><div>Yechish</div></button>
   </nav>
 
 <script>
-/* =========================
-   CONFIG
-========================= */
+/* ===== CONFIG ===== */
 const AD_URL = "https://www.profitableratecpm.com/xiv0z2chm?key=5690144e75c574aa830a1c168deccde7";
-const DAILY_LIMIT = 150;
-const AD_REWARD = 150;
-const AD_SECONDS = 15;
+const DAILY_LIMIT = 150;      // 1 kunda 150 marta
+const AD_REWARD   = 150;
+const AD_SECONDS  = 15;
 const MIN_WITHDRAW = 1000;
 
-/* =========================
-   TELEGRAM WEBAPP USER
-========================= */
+/* ===== TELEGRAM USER ===== */
 let tgUser = { id: null, name: null };
 (function detectTelegram(){
   try {
@@ -245,41 +187,25 @@ let tgUser = { id: null, name: null };
         tgUser.id = String(u.id);
         tgUser.name = (u.first_name || "") + (u.last_name ? (" " + u.last_name) : "");
       }
-      // Optional: expand to full-height inside Telegram
       try { window.Telegram.WebApp.expand(); } catch(e){}
     }
   } catch(e){}
 })();
 
-/* =========================
-   STORAGE HELPERS
-========================= */
-const storageKey = (k) => {
-  const uid = tgUser.id || "guest";
-  return `ce_${uid}_${k}`;
-};
-const load = (k, d) => {
-  try{
-    const v = localStorage.getItem(storageKey(k));
-    return v===null ? d : JSON.parse(v);
-  }catch(e){ return d }
-};
-const save = (k, v) => {
-  try{ localStorage.setItem(storageKey(k), JSON.stringify(v)); }catch(e){}
-};
+/* ===== STORAGE HELPERS ===== */
+const storageKey = (k) => (tgUser.id ? `ce_${tgUser.id}_${k}` : `ce_guest_${k}`);
+const load = (k, d) => { try{ const v = localStorage.getItem(storageKey(k)); return v===null? d : JSON.parse(v);}catch(e){return d}};
+const save = (k, v) => { try{ localStorage.setItem(storageKey(k), JSON.stringify(v)); }catch(e){} };
 
-/* =========================
-   STATE
-========================= */
+/* ===== STATE ===== */
 let state = {
-  coins: load("coins", 0),
-  // kunlik limit uchun sanani saqlaymiz
-  day: load("day", new Date().toDateString()),
+  coins:  load("coins", 0),
+  day:    load("day", new Date().toDateString()),
   clicks: load("clicks", 0),
-  lang: load("lang", "uz")
+  lang:   load("lang", "uz")
 };
 
-// agar sana almashgan bo‘lsa, bugungi kunga reset
+// Sana o‘zgarsa — kunlik klik reset
 function ensureToday(){
   const today = new Date().toDateString();
   if (state.day !== today){
@@ -291,73 +217,11 @@ function ensureToday(){
 }
 ensureToday();
 
-/* =========================
-   I18N
-========================= */
+/* ===== I18N ===== */
 const I18N = {
-  uz: {
-    missions: "Vazifalar",
-    watchAd: "Reklama ko‘rish",
-    reward: "Mukofot",
-    start: "Boshlash",
-    dontClose: "Iltimos, oynani 15 soniya yopmang.",
-    claim: "Mukofotni olish",
-    adNote: "Agar reklama ko‘rinmasa, qurilmangizda “pop-up/adblock” bloklari yo‘qligini tekshiring.",
-    joinChannel: "Kanalga obuna bo‘lish",
-    profile: "Profil",
-    yourId: "Sizning ID",
-    yourName: "Ismingiz",
-    yourCoins: "Tangalar",
-    admin: "Admin",
-    language: "Til",
-    withdraw: "Pul yechish",
-    withdrawNote: "Minimal yechish limiti: 1000 🪙. Yechish uchun admin bilan bog‘laning.",
-    amount: "Miqdor (🪙)",
-    requestWithdraw: "So‘rov yuborish",
-    sent: "So‘rov tayyorlandi. Admin bilan bog‘lanishingiz mumkin."
-  },
-  ru: {
-    missions: "Задания",
-    watchAd: "Смотреть рекламу",
-    reward: "Награда",
-    start: "Начать",
-    dontClose: "Пожалуйста, не закрывайте окно 15 секунд.",
-    claim: "Забрать награду",
-    adNote: "Если реклама не отображается, проверьте блокировку всплывающих окон/AdBlock.",
-    joinChannel: "Подписаться на канал",
-    profile: "Профиль",
-    yourId: "Ваш ID",
-    yourName: "Ваше имя",
-    yourCoins: "Монеты",
-    admin: "Админ",
-    language: "Язык",
-    withdraw: "Вывод",
-    withdrawNote: "Минимальный вывод: 1000 🪙. Для вывода свяжитесь с админом.",
-    amount: "Сумма (🪙)",
-    requestWithdraw: "Отправить запрос",
-    sent: "Запрос сформирован. Свяжитесь с админом."
-  },
-  en: {
-    missions: "Missions",
-    watchAd: "Watch Ad",
-    reward: "Reward",
-    start: "Start",
-    dontClose: "Please do not close the window for 15s.",
-    claim: "Claim Reward",
-    adNote: "If the ad is not visible, check popup/adblock settings.",
-    joinChannel: "Join Channel",
-    profile: "Profile",
-    yourId: "Your ID",
-    yourName: "Your Name",
-    yourCoins: "Coins",
-    admin: "Admin",
-    language: "Language",
-    withdraw: "Withdraw",
-    withdrawNote: "Minimum withdrawal is 1000 🪙. Contact admin to proceed.",
-    amount: "Amount (🪙)",
-    requestWithdraw: "Send Request",
-    sent: "Request prepared. You can contact the admin."
-  }
+  uz:{missions:"Vazifalar",watchAd:"Reklama ko‘rish",reward:"Mukofot",start:"Boshlash",dontClose:"Iltimos, oynani 15 soniya yopmang.",claim:"Mukofotni olish",adNote:"Agar reklama ko‘rinmasa, qurilmangizda “pop-up/adblock” bloklari yo‘qligini tekshiring.",joinChannel:"Kanalga obuna bo‘lish",profile:"Profil",yourId:"Sizning ID",yourName:"Ismingiz",yourCoins:"Tangalar",admin:"Admin",language:"Til",withdraw:"Pul yechish",withdrawNote:"Minimal yechish limiti: 1000 🪙. Yechish uchun admin bilan bog‘laning.",amount:"Miqdor (🪙)",requestWithdraw:"So‘rov yuborish",sent:"So‘rov tayyorlandi. Admin bilan bog‘lanishingiz mumkin."},
+  ru:{missions:"Задания",watchAd:"Смотреть рекламу",reward:"Награда",start:"Начать",dontClose:"Пожалуйста, не закрывайте окно 15 секунд.",claim:"Забрать награду",adNote:"Если реклама не отображается, проверьте блокировку всплывающих окон/AdBlock.",joinChannel:"Подписаться на канал",profile:"Профиль",yourId:"Ваш ID",yourName:"Ваше имя",yourCoins:"Монеты",admin:"Админ",language:"Язык",withdraw:"Вывод",withdrawNote:"Минимальный вывод: 1000 🪙. Для вывода свяжитесь с админом.",amount:"Сумма (🪙)",requestWithdraw:"Отправить запрос",sent:"Запрос сформирован. Свяжитесь с админом."},
+  en:{missions:"Missions",watchAd:"Watch Ad",reward:"Reward",start:"Start",dontClose:"Please do not close the window for 15s.",claim:"Claim Reward",adNote:"If the ad is not visible, check popup/adblock settings.",joinChannel:"Join Channel",profile:"Profile",yourId:"Your ID",yourName:"Your Name",yourCoins:"Coins",admin:"Admin",language:"Language",withdraw:"Withdraw",withdrawNote:"Minimum withdrawal is 1000 🪙. Contact admin to proceed.",amount:"Amount (🪙)",requestWithdraw:"Send Request",sent:"Request prepared. You can contact the admin."}
 };
 function applyI18n(){
   const dict = I18N[state.lang] || I18N.uz;
@@ -365,15 +229,12 @@ function applyI18n(){
     const key = el.getAttribute("data-i18n");
     if (dict[key]) el.textContent = dict[key];
   });
-  // title and small labels
   document.getElementById("appTitle").textContent = "ClickEarn";
   document.getElementById("balanceLabel").textContent = dict.yourCoins;
 }
 applyI18n();
 
-/* =========================
-   UI BINDINGS
-========================= */
+/* ===== UI ===== */
 const tabs = document.querySelectorAll(".tab-btn");
 const sections = document.querySelectorAll(".section");
 tabs.forEach(btn=>{
@@ -396,6 +257,7 @@ function refreshHome(){
   const left = Math.max(0, DAILY_LIMIT - state.clicks);
   coinCountEl.textContent = state.coins;
   dailyLeftEl.textContent = left + " / " + DAILY_LIMIT;
+  coinBtn.disabled = (left === 0);               // LIMIT GA YETSA BOSIB BO‘LMAYDI
 }
 function refreshProfile(){
   document.getElementById("userId").textContent = tgUser.id || "—";
@@ -405,16 +267,14 @@ function refreshProfile(){
 function refreshWithdraw(){
   document.getElementById("wdCoins").textContent = state.coins;
 }
-function refreshAll(){
-  refreshHome(); refreshProfile(); refreshWithdraw();
-}
+function refreshAll(){ refreshHome(); refreshProfile(); refreshWithdraw(); }
 refreshAll();
 
 coinBtn.addEventListener("click", ()=>{
   ensureToday();
   if (state.clicks >= DAILY_LIMIT){
-    alert("❌ Kunlik limit tugadi!");
-    return;
+    refreshHome();
+    return; // bosilmaydi, disabled ham bor
   }
   state.coins += 1;
   state.clicks += 1;
@@ -431,9 +291,7 @@ resetDayBtn.addEventListener("click", ()=>{
   refreshAll();
 });
 
-/* =========================
-   AD FLOW (15s TIMER)
-========================= */
+/* ===== AD (15s) ===== */
 const openAdBtn = document.getElementById("openAdBtn");
 const adBlock = document.getElementById("adBlock");
 const adIframe = document.getElementById("adIframe");
@@ -443,7 +301,7 @@ let adTimer = null;
 
 openAdBtn.addEventListener("click", ()=>{
   adBlock.style.display = "block";
-  adIframe.src = AD_URL; // iframe ichida ko‘rsatamiz
+  adIframe.src = AD_URL;
   claimBtn.disabled = true;
   let t = AD_SECONDS;
   timerText.textContent = t+"s";
@@ -460,19 +318,15 @@ openAdBtn.addEventListener("click", ()=>{
 });
 
 claimBtn.addEventListener("click", ()=>{
-  // reklamadan keyin mukofot
   state.coins += AD_REWARD;
   save("coins", state.coins);
   refreshAll();
-  // yopamiz
   adBlock.style.display = "none";
   adIframe.src = "";
   alert("🎉 +"+AD_REWARD+" tanga olindi!");
 });
 
-/* =========================
-   LANGUAGE SWITCH
-========================= */
+/* ===== LANGUAGE ===== */
 document.querySelectorAll(".chip[data-lang]").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     state.lang = btn.getAttribute("data-lang");
@@ -482,34 +336,17 @@ document.querySelectorAll(".chip[data-lang]").forEach(btn=>{
   });
 });
 
-/* =========================
-   WITHDRAW
-========================= */
+/* ===== WITHDRAW ===== */
 const withdrawBtn = document.getElementById("withdrawBtn");
 const wdMsg = document.getElementById("wdMsg");
 withdrawBtn.addEventListener("click", ()=>{
   const amt = parseInt(document.getElementById("amount").value || "0", 10);
-  if (isNaN(amt) || amt<=0){
-    wdMsg.textContent = "❌ Miqdorni to‘g‘ri kiriting.";
-    wdMsg.style.color = "var(--danger)";
-    return;
-  }
-  if (amt < MIN_WITHDRAW){
-    wdMsg.textContent = "❌ Minimal yechish "+MIN_WITHDRAW+" 🪙.";
-    wdMsg.style.color = "var(--danger)";
-    return;
-  }
-  if (amt > state.coins){
-    wdMsg.textContent = "❌ Sizda yetarli tanga yo‘q.";
-    wdMsg.style.color = "var(--danger)";
-    return;
-  }
-  // admin uchun tayyor matn
+  if (isNaN(amt) || amt<=0){ wdMsg.textContent = "❌ Miqdorni to‘g‘ri kiriting."; wdMsg.style.color = "var(--danger)"; return; }
+  if (amt < MIN_WITHDRAW){ wdMsg.textContent = "❌ Minimal yechish "+MIN_WITHDRAW+" 🪙."; wdMsg.style.color = "var(--danger)"; return; }
+  if (amt > state.coins){ wdMsg.textContent = "❌ Sizda yetarli tanga yo‘q."; wdMsg.style.color = "var(--danger)"; return; }
   const uid = tgUser.id || "—";
   const uname = tgUser.name || "—";
-  const text = encodeURIComponent(`Yechib olish so‘rovi:\nID: ${uid}\nIsm: ${uname}\nMiqdor: ${amt} 🪙`);
   const link = `https://t.me/AF_278?start=${Date.now()}`;
-  // foydalanuvchiga xabar
   wdMsg.innerHTML = `✅ <span data-i18n="sent">So‘rov tayyorlandi. Admin bilan bog‘lanishingiz mumkin.</span> <a href="${link}" target="_blank">@AF_278</a>`;
   wdMsg.style.color = "var(--muted)";
 });
